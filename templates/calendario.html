@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta por Fecha - Monitor IoT</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { display: flex; flex-direction: column; min-height: 100vh; text-align: center; background-color: #F4A460; /* Naranja suave */ }
+        header { background-color: #CC5500; /* Naranja más tenue */ color: white; padding: 15px; font-size: 22px; font-weight: bold; }
+        nav { background-color: #BF5F3F; /* Naranja tierra más suave */ padding: 10px; text-align: center; }
+        nav a {
+            color: white; /* Texto blanco en enlaces */
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px;
+        }
+        nav a:hover {
+            color: #FFD700; /* Dorado al pasar el mouse */
+        }
+        .dropdown { position: relative; display: inline-block; }
+        .dropbtn {
+            background-color: #BF5F3F; color: white; padding: 12px;
+            border: none; cursor: pointer; font-size: 18px;
+        }
+        .dropdown-content {
+            display: none; position: absolute;
+            background-color: white; min-width: 160px;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.2); z-index: 1;
+        }
+        .dropdown-content a {
+            color: #BF5F3F; padding: 12px; display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #FFD700; color: black;
+        }
+        main {
+            flex-grow: 1; padding: 20px;
+            background-color: #F2F2F2; /* Blanco ceniza */
+        }
+        table { width: 60%; margin: auto; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; }
+        th { background-color: #CC5500; color: white; }
+        footer { background-color: #333; color: white; padding: 15px; }
+    </style>
+</head>
+<body>
+
+    <header>📆 Consulta por Fecha - Monitor IoT</header>
+
+    <nav>
+        <a href="/">🏠 Inicio</a>
+        <div class="dropdown">
+            <button class="dropbtn">📊 Datos ▼</button>
+            <div class="dropdown-content">
+                <a href="/consultar?rango=72">Últimas 72h</a>
+                <a href="/consultar?rango=48">Últimas 48h</a>
+                <a href="/consultar?rango=24">Últimas 24h</a>
+                <a href="/calendario">Calendario</a>
+            </div>
+        </div>
+        <a href="#">⚙️ Configuración</a>
+    </nav>
+
+    <main>
+        <h2>Selecciona una fecha para consultar datos</h2>
+        <form method="POST">
+            <label for="fecha">📅 Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+            <button type="submit">🔍 Buscar</button>
+        </form>
+
+        {% if resultado %}
+            {% if 'mensaje' in resultado %}
+                <p style="color:red;">{{ resultado['mensaje'] }}</p>
+            {% else %}
+                <h2>Datos del {{ resultado['fecha'] }}</h2>
+                <table>
+                    <tr><th>Dato</th><th>Valor</th><th>Hora</th></tr>
+                    <tr><td>🌡️ Temperatura Máxima</td><td>{{ resultado['temp_max'] }} °C</td><td>{{ resultado['hora_temp_max'] }}</td></tr>
+                    <tr><td>❄️ Temperatura Mínima</td><td>{{ resultado['temp_min'] }} °C</td><td>{{ resultado['hora_temp_min'] }}</td></tr>
+                    <tr><td>⚡ Presión Máxima</td><td>{{ resultado['presion_max'] }} hPa</td><td>{{ resultado['hora_presion_max'] }}</td></tr>
+                    <tr><td>📉 Presión Mínima</td><td>{{ resultado['presion_min'] }} hPa</td><td>{{ resultado['hora_presion_min'] }}</td></tr>
+                </table>
+            {% endif %}
+        {% endif %}
+    </main>
+
+    <footer>&copy; 2025 - Proyecto IoT de Ariel</footer>
+
+</body>
+</html>
